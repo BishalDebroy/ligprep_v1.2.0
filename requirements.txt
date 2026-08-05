@@ -1,0 +1,3 @@
+rdkit>=2023.03
+dimorphite-dl>=2.0
+psutil>=5.9

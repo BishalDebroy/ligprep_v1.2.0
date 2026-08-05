@@ -1,0 +1,6 @@
+# comment line
+CCO	Ethanol
+CC(=O)O	Acetic_acid
+c1ccccc1O	Phenol
+C1=CC=C(C=C1)C(=O)O	Benzoic_acid   # invalid? valid
+C	Methane
