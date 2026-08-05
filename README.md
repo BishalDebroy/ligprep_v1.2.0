@@ -21,7 +21,7 @@ Designed for millions of molecules, it streams data, uses multiprocessing, and f
 - Configurable via command line
 
 ## Dependencies
-- Python ≥ 3.11
+- Python ≥ 3.10
 - RDKit
 - Dimorphite-DL
 - psutil (for memory logging)
@@ -29,7 +29,7 @@ Designed for millions of molecules, it streams data, uses multiprocessing, and f
 Install via conda (recommended) or pip:
 
 ```
-conda create -n ligprep_env python=3.11 rdkit -c conda forge
+conda create -n ligprep_env python=3.10 rdkit -c conda forge
 conda activate ligprep_env
 pip install dimorphite-dl psutil
 ```
