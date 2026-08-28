@@ -83,10 +83,10 @@ obabel -V
 ```
 2. Converting SDF library when ligand name not provided in the input.smi file, this command will name the ligand as `ligand_1.pdbqt`, `ligand_2.pdbqt` and so on
 ```
-obabel output_test_taut.sdf -O ligand_.pdbqt
+obabel output_test_taut.sdf -O ligand_.pdbqt -m --minimize --ff UFF
 ```
 3. Converting SDF library with ligand name in the input.smi file, this command will replace `ligand_`, with the original name in metadata.
 ```
-obabel output_test_taut.sdf -O ligand_.pdbqt --split
+obabel output_test_taut.sdf -O ligand_.pdbqt --split --minimize --ff UFF
 ```
 # The ligand(s) are ready for docking
