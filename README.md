@@ -1,4 +1,4 @@
-# Industry-scale Ligand Preparation Pipeline
+# Large-scale Ligand Preparation Pipeline
 
 A production quality Python pipeline that converts a SMILES file into two multi-ligand SDF files suitable for virtual screening:
 
@@ -51,17 +51,23 @@ python3 run_ligprep.py example_input.smi output_test -o results
 python3 run_ligprep.py example_input.smi output_test -o results --overwrite
 ```
 
-4. For advanced usage, use this command to open different flags
+4. Recommanded usage
+```
+python run_ligprep.py example_input.smi output_test --ph 7.4 --ff UFF --num-cpus 18 -o results -l resultslog.txt -v
+```
+optimize the value of `--ph`, `--ff`, and `--num-cpus` as per requirement
+
+6. For advanced usage, use this command to open different flags
 ```
 python3 run_ligprep.py --help
 ```
 
-5. For perform a test run use this command
+6. For perform a test run use this command
 ```
 python3 -m unittest test_pipeline.py -v
 ```
 
-6. Deactivate the conda env
+7. Deactivate the conda env
 ```
 conda deactivate
 ```
