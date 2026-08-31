@@ -22,7 +22,7 @@ from metadata import first_sdf_tags, second_sdf_tags
 from writer import mol_with_tags_to_sdf_block, write_sdf_blocks
 from utils import setup_logging, unique_id, current_date_tag, memory_usage_mb, log_memory, start_queue_listener, worker_logging_init
 
-__version__ = "1.2.0"
+__version__ = "1.2.1"
 
 logger = logging.getLogger("ligprep")
 
