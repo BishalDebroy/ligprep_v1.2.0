@@ -1,46 +1,62 @@
 """
-reader.py - iterate over SMILES and SDF files with minimal memory footprient.
+reader.py - iterate over SMILES and SDF files with minimal memory footprint.
 """
 
 import csv
 import io
 import re
 from pathlib import Path
-from typing import Generator, Tuple
+from typing import Generator, Tuple, Optional
 
-def detect_delimiter(first_line: str) -> str:
-    """Return the delimiter that yields exactly two fields: tab, comma, or whitespace."""
-    line = first_line.strip()
+def detect_delimiter(line: str) -> Optional[str]:
+    """
+    Try to determine the delimiter (tab, comma, or whitespace) from a single
+    line, based on which one splits it into exactly two fields.
+
+    Returns None if the line is inconclusive - e.g. a bare SMILES with no
+    name/ID column - rather than raising, since a single such line
+    elsewhere in a large file shouldn't abort reading the whole file.
+    """
+    line = line.strip()
     if not line:
-        return "\t"
+        return None
     for delim in ["\t", ",", " "]:
         parts = line.split(delim)
         if len(parts) == 2:
             return delim
-
-    # Falback to whitespace spliting (Collapse multiple space)
-    parts = line.split()
-    if len(parts) >= 2:
-        return " "
-    raise ValueError(f"Cannot determine delimiter from line: {line}")
+    return None
 
 def read_smiles(file_path: str) -> Generator[Tuple[str, str, int], None, None]:
     """
     Yield (smiles, name, line number) from a SMILE file.
-    Handle comment (#) and blanket lines.
-    Automatically detects delimiter
+    Handle comment (#) and blank lines.
+    Automatically detects delimiter by scanning for the first line that
+    unambiguously reveals it (exactly two fields); lines with only a bare
+    SMILES and no name are tolerated anywhere in the file.
     """
     path = Path(file_path)
+    delimiter = None
+    found_any_data_line = False
     with path.open("r", encoding="utf-8") as fh:
-        # Skip blank/comment lines to find first data row
         for raw_line in fh:
             line = raw_line.strip()
             if not line or line.startswith("#"):
                 continue
+            found_any_data_line = True
             delimiter = detect_delimiter(line)
-            break
-        else:
-            return # empty file
+            if delimiter is not None:
+                break
+            # Inconclusive line (e.g. a bare SMILES, no name column) -
+            # keep scanning later lines for one that reveals the delimiter.
+
+    if not found_any_data_line:
+        return  # empty file
+
+    if delimiter is None:
+        # No line in the file yielded exactly two fields - the file is
+        # likely entirely single-column SMILES (no name/ID column at all).
+        # Whitespace is a safe default: such lines have nothing to split on.
+        delimiter = " "
 
     with path.open("r", encoding="utf-8") as fh:
         reader = csv.reader(fh, delimiter=delimiter)
